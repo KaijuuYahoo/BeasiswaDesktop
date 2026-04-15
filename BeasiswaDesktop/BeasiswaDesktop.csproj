@@ -72,6 +72,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Admin.cs" />
+    <Compile Include="Beasiswa.cs" />
+    <Compile Include="Jenjang.cs" />
+    <Compile Include="Kategori.cs" />
+    <Compile Include="Koneksi.cs" />
+    <Compile Include="Mahasiswa.cs" />
     <EmbeddedResource Include="BeasiswaRead.resx">
       <DependentUpon>BeasiswaRead.cs</DependentUpon>
     </EmbeddedResource>
