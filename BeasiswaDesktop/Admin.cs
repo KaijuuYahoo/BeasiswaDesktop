@@ -1,17 +1,16 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Windows.Forms; // Need this for DialogResult if we strictly follow the diagram for logout, or just basic boolean
+using System.Windows.Forms;
 
 namespace BeasiswaDesktop
 {
     public class Admin
     {
-        private string id { get; set; }
+        private int id { get; set; }
         private string username { get; set; }
         private string password { get; set; }
 
-        // Menerima input username & password dari UI, mengembalikan array (idAdmin, username) atau null
         public string[] login(string user, string pass)
         {
             string[] result = null;
@@ -30,11 +29,14 @@ namespace BeasiswaDesktop
                         {
                             if (reader.Read())
                             {
-                                this.id = reader["IDAdmin"].ToString();
+                                string dbId = reader["IDAdmin"].ToString();
+                                int parsedId = 0;
+                                int.TryParse(dbId, out parsedId);
+                                this.id = parsedId;
                                 this.username = reader["username"].ToString();
 
                                 result = new string[2];
-                                result[0] = reader["IDAdmin"].ToString();
+                                result[0] = dbId;
                                 result[1] = this.username;
                             }
                         }
@@ -68,7 +70,7 @@ namespace BeasiswaDesktop
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@B", b.nama_beasiswa);
-                    cmd.Parameters.AddWithValue("@J", b.nama_jenjang); // Using nama_jenjang as id based on your Class Diagram mapping
+                    cmd.Parameters.AddWithValue("@J", b.nama_jenjang); 
                     cmd.Parameters.AddWithValue("@K", b.nama_kategori);
                     cmd.Parameters.AddWithValue("@TB", b.tgl_buka);
                     cmd.Parameters.AddWithValue("@TT", b.tgl_tutup);
