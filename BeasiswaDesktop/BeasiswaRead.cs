@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -6,13 +6,9 @@ namespace BeasiswaDesktop
 {
     public partial class BeasiswaRead : Form
     { 
-        private readonly SqlConnection conn;
-        private readonly string connectionString =
-            "Data Source=LAPTOP-QEMA84FU\\HOME;Initial Catalog=beasiswaDB;Integrated Security=True";
         public BeasiswaRead()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
         }
 
         private void BeasiswaRead_Load(object sender, EventArgs e)
@@ -30,10 +26,8 @@ namespace BeasiswaDesktop
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
-                {
-                    conn.Open();
-                }
+                Mahasiswa mhs = new Mahasiswa();
+                System.Data.DataTable dt = mhs.LihatBeasiswa();
 
                 dgvBeasiswa.Rows.Clear();
                 dgvBeasiswa.Columns.Clear();
@@ -46,36 +40,18 @@ namespace BeasiswaDesktop
                 dgvBeasiswa.Columns.Add("link_beasiswa", "Link");
                 dgvBeasiswa.Columns.Add("deskripsi", "Deskripsi");
 
-                string query = @"
-                        SELECT 
-                            b.nama_beasiswa,
-                            j.nama_jenjang,
-                            k.nama_kategori,
-                            b.tgl_buka,
-                            b.tgl_tutup,
-                            b.link_beasiswa,
-                            b.deskripsi
-                        FROM Beasiswa b
-                        JOIN Jenjang j ON b.id_jenjang = j.id_jenjang
-                        JOIN Kategori k ON b.id_kategori = k.id_kategori";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                foreach (System.Data.DataRow row in dt.Rows)
                 {
                     dgvBeasiswa.Rows.Add(
-                        reader["nama_beasiswa"].ToString(),
-                        reader["nama_jenjang"].ToString(),
-                        reader["nama_kategori"].ToString(),
-                        Convert.ToDateTime(reader["tgl_buka"]).ToShortDateString(),
-                        Convert.ToDateTime(reader["tgl_tutup"]).ToShortDateString(),
-                        reader["link_beasiswa"].ToString(),
-                        reader["deskripsi"].ToString()
+                        row["nama_beasiswa"].ToString(),
+                        row["nama_jenjang"].ToString(),
+                        row["nama_kategori"].ToString(),
+                        Convert.ToDateTime(row["tgl_buka"]).ToShortDateString(),
+                        Convert.ToDateTime(row["tgl_tutup"]).ToShortDateString(),
+                        row["link_beasiswa"].ToString(),
+                        row["deskripsi"].ToString()
                     );
                 }
-
-                reader.Close();
             }
             catch (Exception ex)
             {
@@ -89,48 +65,24 @@ namespace BeasiswaDesktop
 
                 try
                 {
-                    if (conn.State == System.Data.ConnectionState.Closed)
-                        conn.Open();
+                    Mahasiswa mhs = new Mahasiswa();
+                    System.Data.DataTable dt = mhs.CariBeasiswa(keyword);
 
                     dgvBeasiswa.Rows.Clear();
 
-                    string query = @"
-                                SELECT 
-                                    b.nama_beasiswa,
-                                    j.nama_jenjang,
-                                    k.nama_kategori,
-                                    b.tgl_buka,
-                                    b.tgl_tutup,
-                                    b.link_beasiswa,
-                                    b.deskripsi
-                                FROM Beasiswa b
-                                JOIN Jenjang j ON b.id_jenjang = j.id_jenjang
-                                JOIN Kategori k ON b.id_kategori = k.id_kategori
-                                WHERE 
-                                    b.nama_beasiswa LIKE @keyword OR
-                                    j.nama_jenjang LIKE @keyword OR
-                                    k.nama_kategori LIKE @keyword";
-
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    foreach (System.Data.DataRow row in dt.Rows)
                     {
                         dgvBeasiswa.Rows.Add(
-                            reader["nama_beasiswa"].ToString(),
-                            reader["nama_jenjang"].ToString(),
-                            reader["nama_kategori"].ToString(),
-                            Convert.ToDateTime(reader["tgl_buka"]).ToShortDateString(),
-                            Convert.ToDateTime(reader["tgl_tutup"]).ToShortDateString(),
-                            reader["link_beasiswa"].ToString(),
-                            reader["deskripsi"].ToString()
+                            row["nama_beasiswa"].ToString(),
+                            row["nama_jenjang"].ToString(),
+                            row["nama_kategori"].ToString(),
+                            Convert.ToDateTime(row["tgl_buka"]).ToShortDateString(),
+                            Convert.ToDateTime(row["tgl_tutup"]).ToShortDateString(),
+                            row["link_beasiswa"].ToString(),
+                            row["deskripsi"].ToString()
                         );
                     }
-
-                    reader.Close();
-            }
+                }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal search: " + ex.Message);
