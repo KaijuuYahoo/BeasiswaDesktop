@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -164,6 +164,15 @@ namespace BeasiswaDesktop
             finally
             {
                 conn.Close();
+            }
+        }
+
+        private void logOut_Click(object sender, EventArgs e)
+        {
+            DialogResult confirm = MessageBox.Show("Apakah Anda yakin ingin log out?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.Yes)
+            {
+                this.Close();
             }
         }
     }
