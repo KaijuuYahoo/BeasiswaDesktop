@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,8 +14,6 @@ namespace BeasiswaDesktop
     public partial class Insert_Update : Form
     {
         private readonly SqlConnection conn;
-        private readonly string connectionString =
-            "Data Source=LAPTOP-QEMA84FU\\HOME;Initial Catalog=beasiswaDB;Integrated Security=True";
 
         private void label4_Click(object sender, EventArgs e)
         {
@@ -24,15 +22,15 @@ namespace BeasiswaDesktop
 
         private int selectedId = 0;
 
-        // ================= CONSTRUCTOR =================
+        
         public Insert_Update(int id)
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
+            conn = Koneksi.GetConnection();
             selectedId = id;
         }
 
-        // ================= LOAD =================
+        
         private void Insert_Update_Load(object sender, EventArgs e)
         {
             LoadJenjang();
@@ -51,7 +49,7 @@ namespace BeasiswaDesktop
             }
         }
 
-        // ================= COMBO =================
+        
         private void LoadJenjang()
         {
             try
@@ -65,7 +63,7 @@ namespace BeasiswaDesktop
                 da.Fill(dt);
 
                 DataRow row = dt.NewRow();
-                row["id_jenjang"] = 0; // GANTI dari DBNull
+                row["id_jenjang"] = 0; 
                 row["nama_jenjang"] = "-- Pilih Jenjang --";
                 dt.Rows.InsertAt(row, 0);
 
@@ -93,7 +91,7 @@ namespace BeasiswaDesktop
                 da.Fill(dt);
 
                 DataRow row = dt.NewRow();
-                row["id_kategori"] = 0; // GANTI
+                row["id_kategori"] = 0; 
                 row["nama_kategori"] = "-- Pilih Kategori --";
                 dt.Rows.InsertAt(row, 0);
 
@@ -108,7 +106,7 @@ namespace BeasiswaDesktop
             }
         }
 
-        // ================= LOAD DATA EDIT =================
+        
         private void LoadbyId()
         {
             try
@@ -135,7 +133,7 @@ namespace BeasiswaDesktop
 
                     r.Close();
 
-                    // 🔥 WAJIB: pastikan value ada
+                    
                     namaJ.SelectedValue = jenjang;
                     namaK.SelectedValue = kategori;
                 }
@@ -146,29 +144,22 @@ namespace BeasiswaDesktop
             }
         }
 
-        // ================= INSERT =================
+        
         private void btnInsert_Click(object sender, EventArgs e)
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                Beasiswa b = new Beasiswa();
+                b.nama_beasiswa = namaB.Text;
+                b.nama_jenjang = Convert.ToInt32(namaJ.SelectedValue);
+                b.nama_kategori = Convert.ToInt32(namaK.SelectedValue);
+                b.tgl_buka = dtpBuka.Value;
+                b.tgl_tutup = dtpTutup.Value;
+                b.link_beasiswa = link.Text;
+                b.deskripsi = deskripsi.Text;
 
-                string query = @"INSERT INTO Beasiswa
-                (nama_beasiswa,id_jenjang,id_kategori,tgl_buka,tgl_tutup,link_beasiswa,deskripsi)
-                VALUES(@B,@J,@K,@TB,@TT,@L,@D)";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                cmd.Parameters.AddWithValue("@B", namaB.Text);
-                cmd.Parameters.AddWithValue("@J", namaJ.SelectedValue);
-                cmd.Parameters.AddWithValue("@K", namaK.SelectedValue);
-                cmd.Parameters.AddWithValue("@TB", dtpBuka.Value);
-                cmd.Parameters.AddWithValue("@TT", dtpTutup.Value);
-                cmd.Parameters.AddWithValue("@L", link.Text);
-                cmd.Parameters.AddWithValue("@D", deskripsi.Text);
-
-                cmd.ExecuteNonQuery();
+                Admin admin = new Admin();
+                admin.TambahBeasiswa(b);
 
                 MessageBox.Show("Insert berhasil!");
                 ClearForm();
@@ -179,36 +170,23 @@ namespace BeasiswaDesktop
             }
         }
 
-        // ================= UPDATE =================
+        
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                Beasiswa b = new Beasiswa();
+                b.id = selectedId;
+                b.nama_beasiswa = namaB.Text;
+                b.nama_jenjang = Convert.ToInt32(namaJ.SelectedValue);
+                b.nama_kategori = Convert.ToInt32(namaK.SelectedValue);
+                b.tgl_buka = dtpBuka.Value;
+                b.tgl_tutup = dtpTutup.Value;
+                b.link_beasiswa = link.Text;
+                b.deskripsi = deskripsi.Text;
 
-                string query = @"UPDATE Beasiswa SET
-                nama_beasiswa=@B,
-                id_jenjang=@J,
-                id_kategori=@K,
-                tgl_buka=@TB,
-                tgl_tutup=@TT,
-                link_beasiswa=@L,
-                deskripsi=@D
-                WHERE id_beasiswa=@ID";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                cmd.Parameters.AddWithValue("@ID", selectedId);
-                cmd.Parameters.AddWithValue("@B", namaB.Text);
-                cmd.Parameters.AddWithValue("@J", namaJ.SelectedValue);
-                cmd.Parameters.AddWithValue("@K", namaK.SelectedValue);
-                cmd.Parameters.AddWithValue("@TB", dtpBuka.Value);
-                cmd.Parameters.AddWithValue("@TT", dtpTutup.Value);
-                cmd.Parameters.AddWithValue("@L", link.Text);
-                cmd.Parameters.AddWithValue("@D", deskripsi.Text);
-
-                cmd.ExecuteNonQuery();
+                Admin admin = new Admin();
+                admin.EditBeasiswa(b);
 
                 MessageBox.Show("Update berhasil!");
                 this.Close();
@@ -219,7 +197,7 @@ namespace BeasiswaDesktop
             }
         }
 
-        // ================= CLEAR =================
+        
         private void ClearForm()
         {
             namaB.Clear();
