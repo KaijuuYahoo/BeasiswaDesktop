@@ -28,20 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvBeasiswa = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textSearch = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBeasiswa)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // dgvBeasiswa
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 41);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(776, 374);
-            this.dataGridView1.TabIndex = 0;
+            this.dgvBeasiswa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvBeasiswa.Location = new System.Drawing.Point(12, 41);
+            this.dgvBeasiswa.Name = "dgvBeasiswa";
+            this.dgvBeasiswa.RowHeadersWidth = 51;
+            this.dgvBeasiswa.Size = new System.Drawing.Size(776, 374);
+            this.dgvBeasiswa.TabIndex = 0;
+            this.dgvBeasiswa.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BeasiswaRead_Load);
             // 
             // button1
             // 
@@ -51,13 +53,15 @@
             this.button1.TabIndex = 1;
             this.button1.Text = "Login";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Login_Click);
             // 
-            // textBox1
+            // textSearch
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(695, 20);
-            this.textBox1.TabIndex = 3;
+            this.textSearch.Location = new System.Drawing.Point(12, 12);
+            this.textSearch.Name = "textSearch";
+            this.textSearch.Size = new System.Drawing.Size(695, 20);
+            this.textSearch.TabIndex = 3;
+            this.textSearch.TextChanged += new System.EventHandler(this.SearchText);
             // 
             // button2
             // 
@@ -67,6 +71,7 @@
             this.button2.TabIndex = 4;
             this.button2.Text = "Search";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // BeasiswaRead
             // 
@@ -74,13 +79,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textSearch);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dgvBeasiswa);
             this.Name = "BeasiswaRead";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.BeasiswaRead_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBeasiswa)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -88,9 +93,9 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvBeasiswa;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textSearch;
         private System.Windows.Forms.Button button2;
     }
 }
