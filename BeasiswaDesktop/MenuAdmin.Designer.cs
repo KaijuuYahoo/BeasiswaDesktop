@@ -1,4 +1,4 @@
-﻿namespace BeasiswaDesktop
+namespace BeasiswaDesktop
 {
     partial class MenuAdmin
     {
@@ -102,6 +102,7 @@
             this.logOut.TabIndex = 11;
             this.logOut.Text = "Log Out";
             this.logOut.UseVisualStyleBackColor = true;
+            this.logOut.Click += new System.EventHandler(this.logOut_Click);
             // 
             // MenuAdmin
             // 
