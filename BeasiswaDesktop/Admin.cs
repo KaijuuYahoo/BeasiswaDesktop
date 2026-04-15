@@ -7,7 +7,7 @@ namespace BeasiswaDesktop
 {
     public class Admin
     {
-        private int id { get; set; }
+        private string id { get; set; }
         private string username { get; set; }
         private string password { get; set; }
 
@@ -30,7 +30,7 @@ namespace BeasiswaDesktop
                         {
                             if (reader.Read())
                             {
-                                this.id = Convert.ToInt32(reader["IDAdmin"]);
+                                this.id = reader["IDAdmin"].ToString();
                                 this.username = reader["username"].ToString();
 
                                 result = new string[2];
