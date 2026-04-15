@@ -1,4 +1,4 @@
-﻿namespace BeasiswaDesktop
+namespace BeasiswaDesktop
 {
     partial class Insert_Update
     {
@@ -165,6 +165,7 @@
             this.button2.TabIndex = 15;
             this.button2.Text = "Update";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // namaJ
             // 
@@ -207,6 +208,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Insert_Update";
             this.Text = "Insert_Update";
+            this.Load += new System.EventHandler(this.Insert_Update_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
