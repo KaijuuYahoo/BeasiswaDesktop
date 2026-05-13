@@ -64,30 +64,7 @@ namespace BeasiswaDesktop
         {
             string keyword = textSearch.Text.Trim();
 
-                try
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString)) 
-                    {
-                        conn.Open();
-                        using (SqlDataAdapter da = new SqlDataAdapter("sp_SearchBeasiswa", conn))
-                        {
-                            da.SelectCommand.CommandType = CommandType.StoredProcedure;
-
-                            da.SelectCommand.Parameters.AddWithValue("@keyword", keyword);
-
-                            dtBeasiswa = new DataTable();
-
-                            da.Fill(dtBeasiswa);
-
-                            dgvBeasiswa.DataSource = dtBeasiswa;
-                        }
-                    }
-                    
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Gagal search: " + ex.Message);
-                }
+                
         }
 
         private void SearchAutomatic(object sender, EventArgs e)
