@@ -25,7 +25,9 @@ namespace BeasiswaDesktop
         
         public Insert_Update(int id)
         {
-            
+            InitializeComponent();
+            conn = Koneksi.GetConnection();
+            selectedId = id;
         }
 
         
