@@ -1,14 +1,22 @@
 using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BeasiswaDesktop
 {
     public partial class BeasiswaRead : Form
     { 
+        private readonly SqlConnection conn;
+        private readonly string connectionString =
+            "Data Source=RIZQI\\RIZQIMAULANA; Initial Catalog=beasiswaDB; Integrated Security=True";
+        private DataTable dtBeasiswa = new DataTable();
         public BeasiswaRead()
         {
             InitializeComponent();
+            textSearch.TextChanged += SearchAutomatic;
+            BeasiswaRead_Load(this, EventArgs.Empty);
         }
 
         private void BeasiswaRead_Load(object sender, EventArgs e)
@@ -19,6 +27,12 @@ namespace BeasiswaDesktop
         private void Login_Click(object sender, EventArgs e)
         {
             Login loginForm = new Login();
+            loginForm.FormClosed += (s, args) => 
+                {
+                    this.Show();
+                    BeasiswaRead_Load(s, args);
+                };
+            this.Hide();
             loginForm.Show();
         }
 
@@ -26,31 +40,18 @@ namespace BeasiswaDesktop
         {
             try
             {
-                Mahasiswa mhs = new Mahasiswa();
-                System.Data.DataTable dt = mhs.LihatBeasiswa();
-
-                dgvBeasiswa.Rows.Clear();
-                dgvBeasiswa.Columns.Clear();
-
-                dgvBeasiswa.Columns.Add("nama_beasiswa", "Nama Beasiswa");
-                dgvBeasiswa.Columns.Add("nama_jenjang", "Nama Jenjang");
-                dgvBeasiswa.Columns.Add("nama_kategori", "Nama Kategori");
-                dgvBeasiswa.Columns.Add("tgl_buka", "Tanggal Buka");
-                dgvBeasiswa.Columns.Add("tgl_tutup", "Tanggal Tutup");
-                dgvBeasiswa.Columns.Add("link_beasiswa", "Link");
-                dgvBeasiswa.Columns.Add("deskripsi", "Deskripsi");
-
-                foreach (System.Data.DataRow row in dt.Rows)
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    dgvBeasiswa.Rows.Add(
-                        row["nama_beasiswa"].ToString(),
-                        row["nama_jenjang"].ToString(),
-                        row["nama_kategori"].ToString(),
-                        Convert.ToDateTime(row["tgl_buka"]).ToShortDateString(),
-                        Convert.ToDateTime(row["tgl_tutup"]).ToShortDateString(),
-                        row["link_beasiswa"].ToString(),
-                        row["deskripsi"].ToString()
-                    );
+                   conn.Open();
+                    string query = "SELECT * FROM vw_Beasiswa2";
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                    {
+                        dtBeasiswa = new DataTable();
+
+                        da.Fill(dtBeasiswa);
+
+                        dgvBeasiswa.DataSource = dtBeasiswa;
+                    }
                 }
             }
             catch (Exception ex)
@@ -59,39 +60,39 @@ namespace BeasiswaDesktop
             }
         }
 
-        private void SearchButton_Click(object sender, EventArgs e)
+        private void LiveSearch(object sender, EventArgs e)
         {
-                string keyword = textSearch.Text.Trim();
+            string keyword = textSearch.Text.Trim();
 
                 try
                 {
-                    Mahasiswa mhs = new Mahasiswa();
-                    System.Data.DataTable dt = mhs.CariBeasiswa(keyword);
-
-                    dgvBeasiswa.Rows.Clear();
-
-                    foreach (System.Data.DataRow row in dt.Rows)
+                    using (SqlConnection conn = new SqlConnection(connectionString)) 
                     {
-                        dgvBeasiswa.Rows.Add(
-                            row["nama_beasiswa"].ToString(),
-                            row["nama_jenjang"].ToString(),
-                            row["nama_kategori"].ToString(),
-                            Convert.ToDateTime(row["tgl_buka"]).ToShortDateString(),
-                            Convert.ToDateTime(row["tgl_tutup"]).ToShortDateString(),
-                            row["link_beasiswa"].ToString(),
-                            row["deskripsi"].ToString()
-                        );
+                        conn.Open();
+                        using (SqlDataAdapter da = new SqlDataAdapter("sp_SearchBeasiswa", conn))
+                        {
+                            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+
+                            da.SelectCommand.Parameters.AddWithValue("@keyword", keyword);
+
+                            dtBeasiswa = new DataTable();
+
+                            da.Fill(dtBeasiswa);
+
+                            dgvBeasiswa.DataSource = dtBeasiswa;
+                        }
                     }
+                    
                 }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal search: " + ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal search: " + ex.Message);
+                }
         }
 
-        private void SearchText(object sender, EventArgs e)
+        private void SearchAutomatic(object sender, EventArgs e)
         {
-
+            LiveSearch(sender, e);
         }
     }
 }
