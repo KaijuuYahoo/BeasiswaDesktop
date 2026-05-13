@@ -38,17 +38,7 @@ namespace BeasiswaDesktop
         
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (dgvBeasiswa.CurrentRow == null)
-            {
-                MessageBox.Show("Pilih data dulu!");
-                return;
-            }
-
-            int id = Convert.ToInt32(dgvBeasiswa.CurrentRow.Cells["id_beasiswa"].Value);
-
-            Insert_Update form = new Insert_Update(id); 
-            form.ShowDialog();
-            beasiswaLoad1();
+            
         }
         private void beasiswaLoad1()
         {
