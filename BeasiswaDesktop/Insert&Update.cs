@@ -13,11 +13,7 @@ namespace BeasiswaDesktop
 {
     public partial class Insert_Update : Form
     {
-        private BindingSource bindingSource = new BindingSource();
-
         private readonly SqlConnection conn;
-        private readonly string connectionString =
-            "Data Source=RIZQI\\RIZQIMAULANA; Initial Catalog=beasiswaDB; Integrated Security=True";
 
         private void label4_Click(object sender, EventArgs e)
         {
@@ -26,24 +22,19 @@ namespace BeasiswaDesktop
 
         private int selectedId = 0;
 
+        
         public Insert_Update(int id)
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
+            conn = Koneksi.GetConnection();
             selectedId = id;
-            namaJ.DropDownStyle = ComboBoxStyle.DropDownList;
-            namaK.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
+        
         private void Insert_Update_Load(object sender, EventArgs e)
         {
-            this.kategoriTableAdapter.Fill(this.beasiswaDBDataSet.Kategori);
-            this.jenjangTableAdapter.Fill(this.beasiswaDBDataSet.Jenjang);
-            this.beasiswaTableAdapter.Fill(this.beasiswaDBDataSet.Beasiswa);
             LoadJenjang();
             LoadKategori();
-
-            BindControls();
 
             if (selectedId != 0)
             {
@@ -53,75 +44,12 @@ namespace BeasiswaDesktop
             }
             else
             {
-                bindingSource.AddNew();
-                
-                dtpBuka.Value = DateTime.Today;
-                dtpBuka.MinDate = DateTime.Today;
-                
-                dtpTutup.Value = dtpBuka.Value.AddYears(1);
-                
                 button1.Enabled = true;
                 button2.Enabled = false;
             }
-
-            dtpTutup.MinDate = dtpBuka.Value;
-            dtpTutup.MaxDate = dtpBuka.Value.AddYears(1);
         }
 
-        private void BindControls()
-        {
-            try
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Beasiswa", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                bindingSource.DataSource = dt;
-
-                bindingNavigator1.BindingSource = bindingSource;
-                bindingNavigator1.DeleteItem = null;
-
-                namaB.DataBindings.Clear();
-                namaJ.DataBindings.Clear();
-                namaK.DataBindings.Clear();
-                dtpBuka.DataBindings.Clear();
-                dtpTutup.DataBindings.Clear();
-                link.DataBindings.Clear();
-                deskripsi.DataBindings.Clear();
-
-                namaB.DataBindings.Add("Text", bindingSource, "nama_beasiswa", true, DataSourceUpdateMode.Never);
-                namaJ.DataBindings.Add("SelectedValue", bindingSource, "id_jenjang", true, DataSourceUpdateMode.Never);
-                namaK.DataBindings.Add("SelectedValue", bindingSource, "id_kategori", true, DataSourceUpdateMode.Never);
-                dtpBuka.DataBindings.Add("Value", bindingSource, "tgl_buka", true, DataSourceUpdateMode.Never);
-                dtpTutup.DataBindings.Add("Value", bindingSource, "tgl_tutup", true, DataSourceUpdateMode.Never);
-                link.DataBindings.Add("Text", bindingSource, "link_beasiswa", true, DataSourceUpdateMode.Never);
-                deskripsi.DataBindings.Add("Text", bindingSource, "deskripsi", true, DataSourceUpdateMode.Never);
-
-                bindingSource.PositionChanged += (s, e) => {
-                    DataRowView current = (DataRowView)bindingSource.Current;
-                    if (current != null && current["id_beasiswa"] != DBNull.Value)
-                    {
-                        selectedId = Convert.ToInt32(current["id_beasiswa"]);
-                        button1.Enabled = false;
-                        button2.Enabled = true;
-                    }
-                    else
-                    {
-                        selectedId = 0;
-                        button1.Enabled = true;
-                        button2.Enabled = false;
-                    }
-                };
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error BindingNavigator: " + ex.Message);
-            }
-        }
-
+        
         private void LoadJenjang()
         {
             try
@@ -135,7 +63,7 @@ namespace BeasiswaDesktop
                 da.Fill(dt);
 
                 DataRow row = dt.NewRow();
-                row["id_jenjang"] = 0;
+                row["id_jenjang"] = 0; 
                 row["nama_jenjang"] = "-- Pilih Jenjang --";
                 dt.Rows.InsertAt(row, 0);
 
@@ -163,7 +91,7 @@ namespace BeasiswaDesktop
                 da.Fill(dt);
 
                 DataRow row = dt.NewRow();
-                row["id_kategori"] = 0;
+                row["id_kategori"] = 0; 
                 row["nama_kategori"] = "-- Pilih Kategori --";
                 dt.Rows.InsertAt(row, 0);
 
@@ -178,6 +106,7 @@ namespace BeasiswaDesktop
             }
         }
 
+        
         private void LoadbyId()
         {
             try
@@ -204,6 +133,7 @@ namespace BeasiswaDesktop
 
                     r.Close();
 
+                    
                     namaJ.SelectedValue = jenjang;
                     namaK.SelectedValue = kategori;
                 }
@@ -214,29 +144,51 @@ namespace BeasiswaDesktop
             }
         }
 
+        
         private void btnInsert_Click(object sender, EventArgs e)
         {
             try
             {
-                Insert_Update form = new Insert_Update(0);
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                Beasiswa b = new Beasiswa();
+                b.nama_beasiswa = namaB.Text;
+                b.nama_jenjang = Convert.ToInt32(namaJ.SelectedValue);
+                b.nama_kategori = Convert.ToInt32(namaK.SelectedValue);
+                b.tgl_buka = dtpBuka.Value;
+                b.tgl_tutup = dtpTutup.Value;
+                b.link_beasiswa = link.Text;
+                b.deskripsi = deskripsi.Text;
 
-                SqlCommand cmd = new SqlCommand("sp_InsertBeasiswa", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@nama_beasiswa", namaB.Text);
-                cmd.Parameters.AddWithValue("@id_jenjang", namaJ.SelectedValue);
-                cmd.Parameters.AddWithValue("@id_kategori", namaK.SelectedValue);
-                cmd.Parameters.AddWithValue("@tgl_buka", dtpBuka.Value);
-                cmd.Parameters.AddWithValue("@tgl_tutup", dtpTutup.Value);
-                cmd.Parameters.AddWithValue("@link_beasiswa", link.Text);
-                cmd.Parameters.AddWithValue("@deskripsi", deskripsi.Text);
-
-                cmd.ExecuteNonQuery();
+                Admin admin = new Admin();
+                admin.TambahBeasiswa(b);
 
                 MessageBox.Show("Insert berhasil!");
                 ClearForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Beasiswa b = new Beasiswa();
+                b.id = selectedId;
+                b.nama_beasiswa = namaB.Text;
+                b.nama_jenjang = Convert.ToInt32(namaJ.SelectedValue);
+                b.nama_kategori = Convert.ToInt32(namaK.SelectedValue);
+                b.tgl_buka = dtpBuka.Value;
+                b.tgl_tutup = dtpTutup.Value;
+                b.link_beasiswa = link.Text;
+                b.deskripsi = deskripsi.Text;
+
+                Admin admin = new Admin();
+                admin.EditBeasiswa(b);
+
+                MessageBox.Show("Update berhasil!");
                 this.Close();
             }
             catch (Exception ex)
@@ -245,44 +197,7 @@ namespace BeasiswaDesktop
             }
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                SqlCommand cmd = new SqlCommand("sp_UpdateBeasiswa", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@id_beasiswa", selectedId);
-                cmd.Parameters.AddWithValue("@nama_beasiswa", namaB.Text);
-                cmd.Parameters.AddWithValue("@id_jenjang", namaJ.SelectedValue);
-                cmd.Parameters.AddWithValue("@id_kategori", namaK.SelectedValue);
-                cmd.Parameters.AddWithValue("@tgl_buka", dtpBuka.Value);
-                cmd.Parameters.AddWithValue("@tgl_tutup", dtpTutup.Value);
-                cmd.Parameters.AddWithValue("@link_beasiswa", link.Text);
-                cmd.Parameters.AddWithValue("@deskripsi", deskripsi.Text);
-
-                int result = cmd.ExecuteNonQuery();
-                if (result == 0)
-                {
-                    MessageBox.Show("Update gagal: data tidak ditemukan.");
-                    return;
-                }
-                else
-                {
-                    MessageBox.Show("Update berhasil!");
-                    this.Close();
-                }
-                
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
+        
         private void ClearForm()
         {
             namaB.Clear();
@@ -290,30 +205,6 @@ namespace BeasiswaDesktop
             deskripsi.Clear();
             namaJ.SelectedIndex = -1;
             namaK.SelectedIndex = -1;
-        }
-        private void btnTestInjection_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    string query =
-                        "UPDATE Beasiswa SET deskripsi='HACKED' WHERE nama_beasiswa='" +
-                        namaB.Text + "'";
-                    using (SqlCommand cmd = new SqlCommand(query, connection))
-                    {
-                        int result = cmd.ExecuteNonQuery();
-                        MessageBox.Show(result + " baris terupdate");
-                        Insert_Update_Load(sender, e);
-                    }
-                }
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
         private void comboKategori(object sender, EventArgs e)
         {
