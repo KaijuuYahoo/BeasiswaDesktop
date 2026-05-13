@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.dgvBeasiswa = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.textSearch = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgvBeasiswa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvBeasiswa
             // 
             this.dgvBeasiswa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvBeasiswa.Location = new System.Drawing.Point(12, 41);
+            this.dgvBeasiswa.Location = new System.Drawing.Point(12, 42);
             this.dgvBeasiswa.Name = "dgvBeasiswa";
             this.dgvBeasiswa.RowHeadersWidth = 51;
             this.dgvBeasiswa.Size = new System.Drawing.Size(776, 374);
@@ -59,33 +61,23 @@
             // 
             this.textSearch.Location = new System.Drawing.Point(12, 12);
             this.textSearch.Name = "textSearch";
-            this.textSearch.Size = new System.Drawing.Size(695, 20);
+            this.textSearch.Size = new System.Drawing.Size(777, 20);
             this.textSearch.TabIndex = 3;
-            this.textSearch.TextChanged += new System.EventHandler(this.SearchText);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(713, 10);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Search";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.SearchButton_Click);
+            this.textSearch.TextChanged += new System.EventHandler(this.LiveSearch);
             // 
             // BeasiswaRead
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button2);
+            this.ClientSize = new System.Drawing.Size(807, 450);
             this.Controls.Add(this.textSearch);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dgvBeasiswa);
             this.Name = "BeasiswaRead";
-            this.Text = "Form1";
+            this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.BeasiswaRead_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvBeasiswa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -96,7 +88,7 @@
         private System.Windows.Forms.DataGridView dgvBeasiswa;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textSearch;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.BindingSource bindingSource1;
     }
 }
 
