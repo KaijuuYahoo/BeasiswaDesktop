@@ -152,7 +152,7 @@ namespace BeasiswaDesktop
             // 
             this.deskripsi.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.beasiswaBindingSource, "deskripsi", true));
             this.deskripsi.Location = new System.Drawing.Point(66, 433);
-            this.deskripsi.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.deskripsi.Margin = new System.Windows.Forms.Padding(6);
             this.deskripsi.Name = "deskripsi";
             this.deskripsi.Size = new System.Drawing.Size(1458, 341);
             this.deskripsi.TabIndex = 7;
@@ -172,7 +172,7 @@ namespace BeasiswaDesktop
             // 
             this.namaB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.beasiswaBindingSource, "nama_beasiswa", true));
             this.namaB.Location = new System.Drawing.Point(262, 117);
-            this.namaB.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.namaB.Margin = new System.Windows.Forms.Padding(6);
             this.namaB.Name = "namaB";
             this.namaB.Size = new System.Drawing.Size(542, 31);
             this.namaB.TabIndex = 8;
@@ -181,7 +181,7 @@ namespace BeasiswaDesktop
             // 
             this.link.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.beasiswaBindingSource, "link_beasiswa", true));
             this.link.Location = new System.Drawing.Point(982, 263);
-            this.link.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.link.Margin = new System.Windows.Forms.Padding(6);
             this.link.Name = "link";
             this.link.Size = new System.Drawing.Size(552, 31);
             this.link.TabIndex = 11;
@@ -190,7 +190,7 @@ namespace BeasiswaDesktop
             // 
             this.dtpBuka.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.beasiswaBindingSource, "tgl_buka", true));
             this.dtpBuka.Location = new System.Drawing.Point(982, 117);
-            this.dtpBuka.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.dtpBuka.Margin = new System.Windows.Forms.Padding(6);
             this.dtpBuka.Name = "dtpBuka";
             this.dtpBuka.Size = new System.Drawing.Size(552, 31);
             this.dtpBuka.TabIndex = 12;
@@ -199,7 +199,7 @@ namespace BeasiswaDesktop
             // 
             this.dtpTutup.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.beasiswaBindingSource, "tgl_tutup", true));
             this.dtpTutup.Location = new System.Drawing.Point(982, 192);
-            this.dtpTutup.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.dtpTutup.Margin = new System.Windows.Forms.Padding(6);
             this.dtpTutup.Name = "dtpTutup";
             this.dtpTutup.Size = new System.Drawing.Size(552, 31);
             this.dtpTutup.TabIndex = 13;
@@ -207,7 +207,7 @@ namespace BeasiswaDesktop
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(1292, 798);
-            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button1.Margin = new System.Windows.Forms.Padding(6);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(236, 44);
             this.button1.TabIndex = 14;
@@ -218,7 +218,7 @@ namespace BeasiswaDesktop
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(1036, 798);
-            this.button2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button2.Margin = new System.Windows.Forms.Padding(6);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(244, 44);
             this.button2.TabIndex = 15;
@@ -231,7 +231,7 @@ namespace BeasiswaDesktop
             this.namaJ.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.jenjangBindingSource, "nama_jenjang", true));
             this.namaJ.FormattingEnabled = true;
             this.namaJ.Location = new System.Drawing.Point(262, 192);
-            this.namaJ.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.namaJ.Margin = new System.Windows.Forms.Padding(6);
             this.namaJ.Name = "namaJ";
             this.namaJ.Size = new System.Drawing.Size(542, 33);
             this.namaJ.TabIndex = 16;
@@ -247,7 +247,7 @@ namespace BeasiswaDesktop
             this.namaK.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.kategoriBindingSource, "nama_kategori", true));
             this.namaK.FormattingEnabled = true;
             this.namaK.Location = new System.Drawing.Point(262, 263);
-            this.namaK.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.namaK.Margin = new System.Windows.Forms.Padding(6);
             this.namaK.Name = "namaK";
             this.namaK.Size = new System.Drawing.Size(542, 33);
             this.namaK.TabIndex = 17;
@@ -296,7 +296,7 @@ namespace BeasiswaDesktop
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.Padding = new System.Windows.Forms.Padding(0);
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(1608, 42);
+            this.bindingNavigator1.Size = new System.Drawing.Size(1647, 42);
             this.bindingNavigator1.TabIndex = 18;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -389,7 +389,7 @@ namespace BeasiswaDesktop
             // btnSQLi
             // 
             this.btnSQLi.Location = new System.Drawing.Point(788, 798);
-            this.btnSQLi.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnSQLi.Margin = new System.Windows.Forms.Padding(6);
             this.btnSQLi.Name = "btnSQLi";
             this.btnSQLi.Size = new System.Drawing.Size(236, 44);
             this.btnSQLi.TabIndex = 19;
@@ -401,7 +401,7 @@ namespace BeasiswaDesktop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1608, 865);
+            this.ClientSize = new System.Drawing.Size(1647, 865);
             this.Controls.Add(this.btnSQLi);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.namaK);
@@ -421,7 +421,7 @@ namespace BeasiswaDesktop
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.beasiswaBindingSource, "nama_beasiswa", true));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "Insert_Update";
             this.Text = "Insert_Update";
             this.Load += new System.EventHandler(this.Insert_Update_Load);

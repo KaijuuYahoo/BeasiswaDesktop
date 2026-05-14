@@ -84,7 +84,7 @@ namespace BeasiswaDesktop
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
-
+            HitungTotal();
         }
         private void btnDelete_Click(object sender, EventArgs e)
         {
@@ -200,6 +200,29 @@ namespace BeasiswaDesktop
             if (confirm == DialogResult.Yes)
             {
                 this.Close();
+            }
+        }
+        private void HitungTotal()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_CountBeasiswa", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
+                        outputParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(outputParam);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        lblTotal.Text = "Total Beasiswa: " + outputParam.Value.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menghitung total: " + ex.Message);
             }
         }
     }
