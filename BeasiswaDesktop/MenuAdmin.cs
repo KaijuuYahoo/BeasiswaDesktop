@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,25 +14,20 @@ namespace BeasiswaDesktop
     {
         private readonly string idAdmin;
         private readonly string namaAdmin;
-        private readonly SqlConnection conn;
         private DataTable dtBeasiswa = new DataTable();
-        private readonly string connectionString =
-                "Data Source=RIZQI\\RIZQIMAULANA; Initial Catalog=beasiswaDB; Integrated Security=True";
-
 
         public MenuAdmin(string idAdmin, string namaAdmin)
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
             this.idAdmin = idAdmin;
             this.namaAdmin = namaAdmin;
         }
-
 
         private void MenuAdmin_Load(object sender, EventArgs e)
         {
             beasiswaLoad1();
         }
+
         private void btnInsert_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -51,7 +45,7 @@ namespace BeasiswaDesktop
                 return;
             }
 
-            int id = Convert.ToInt32(dgvBeasiswa.CurrentRow.Cells["id_beasiswa"].Value);
+            int id = Convert.ToInt32(dgvBeasiswa.CurrentRow.Cells["ID"].Value);
 
             this.Hide();
             Insert_Update form = new Insert_Update(id);
@@ -59,26 +53,21 @@ namespace BeasiswaDesktop
             beasiswaLoad1();
             this.Show();
         }
+
         private void beasiswaLoad1()
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
                 dgvBeasiswa.DataSource = null;
 
-                string query = "SELECT * FROM vw_Beasiswa";
-                SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                DataTable dt = DAL.GetVwBeasiswa();
 
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dt;
                 dgvBeasiswa.DataSource = bs;
 
-                if (dgvBeasiswa.Columns.Contains("id_beasiswa"))
-                    dgvBeasiswa.Columns["id_beasiswa"].Visible = false;
+                if (dgvBeasiswa.Columns.Contains("ID"))
+                    dgvBeasiswa.Columns["ID"].Visible = true;
             }
             catch (Exception ex)
             {
@@ -86,6 +75,7 @@ namespace BeasiswaDesktop
             }
             HitungTotal();
         }
+
         private void btnDelete_Click(object sender, EventArgs e)
         {
             try
@@ -96,8 +86,8 @@ namespace BeasiswaDesktop
                     return;
                 }
 
-                int id = Convert.ToInt32(dgvBeasiswa.CurrentRow.Cells["id_beasiswa"].Value);
-                string nama = dgvBeasiswa.CurrentRow.Cells["nama_beasiswa"].Value.ToString();
+                int id = Convert.ToInt32(dgvBeasiswa.CurrentRow.Cells["ID"].Value);
+                string nama = dgvBeasiswa.CurrentRow.Cells["Nama Beasiswa"].Value.ToString();
 
                 DialogResult confirm = MessageBox.Show(
                     $"Yakin ingin menghapus data:\n{nama} ?",
@@ -107,14 +97,7 @@ namespace BeasiswaDesktop
 
                 if (confirm == DialogResult.Yes)
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-
-                    SqlCommand cmd = new SqlCommand("sp_DeleteBeasiswa", conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id_beasiswa", id);
-
-                    cmd.ExecuteNonQuery();
+                    DAL.DeleteBeasiswa(id);
                     
                     MessageBox.Show("Data berhasil dihapus!");
                     beasiswaLoad1();
@@ -124,10 +107,6 @@ namespace BeasiswaDesktop
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
-            finally
-            {
-                conn.Close();
-            }
         }
 
         private void LiveSearch(object sender, EventArgs e)
@@ -136,23 +115,8 @@ namespace BeasiswaDesktop
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    using (SqlDataAdapter da = new SqlDataAdapter("sp_SearchBeasiswa", conn))
-                    {
-                        da.SelectCommand.CommandType = CommandType.StoredProcedure;
-
-                        da.SelectCommand.Parameters.AddWithValue("@keyword", keyword);
-
-                        dtBeasiswa = new DataTable();
-
-                        da.Fill(dtBeasiswa);
-
-                        dgvBeasiswa.DataSource = dtBeasiswa;
-                    }
-                }
-
+                dtBeasiswa = DAL.SearchBeasiswa(keyword);
+                dgvBeasiswa.DataSource = dtBeasiswa;
             }
             catch (Exception ex)
             {
@@ -164,23 +128,7 @@ namespace BeasiswaDesktop
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    string query = @"
-                            IF OBJECT_ID('dbo.Beasiswa_backup') IS NOT NULL
-                            BEGIN
-                                DELETE FROM dbo.Beasiswa;
-                                SET IDENTITY_INSERT dbo.Beasiswa ON;
-                                INSERT INTO dbo.Beasiswa (id_beasiswa, nama_beasiswa, id_jenjang, id_kategori, tgl_buka, tgl_tutup, link_beasiswa, deskripsi, dibuat)
-                                SELECT id_beasiswa, nama_beasiswa, id_jenjang, id_kategori, tgl_buka, tgl_tutup, link_beasiswa, deskripsi, dibuat FROM dbo.Beasiswa_backup;
-                                SET IDENTITY_INSERT dbo.Beasiswa OFF;
-                            END";
-                    using (SqlCommand cmd = new SqlCommand(query, connection))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+                DAL.ResetBeasiswaData();
                 MessageBox.Show("Data berhasil direset");
                 beasiswaLoad1();
             }
@@ -194,6 +142,7 @@ namespace BeasiswaDesktop
         {
             LiveSearch(sender, e);
         }
+
         private void logOut_Click(object sender, EventArgs e)
         {
             DialogResult confirm = MessageBox.Show("Apakah Anda yakin ingin log out?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -202,28 +151,54 @@ namespace BeasiswaDesktop
                 this.Close();
             }
         }
+
         private void HitungTotal()
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_CountBeasiswa", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
-                        outputParam.Direction = ParameterDirection.Output;
-                        cmd.Parameters.Add(outputParam);
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        lblTotal.Text = "Total Beasiswa: " + outputParam.Value.ToString();
-                    }
-                }
+                int total = DAL.GetTotalBeasiswa();
+                lblTotal.Text = "Total Beasiswa: " + total.ToString();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal menghitung total: " + ex.Message);
             }
+        }
+
+        public static string GetLocalIPAddress()
+        {
+            string localIP = string.Empty;
+            try
+            {
+                var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        localIP = ip.ToString();
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error getting local IP address:" + ex.Message);
+            }
+            return localIP;
+        }
+
+        private void btnRekap_Click(object sender, EventArgs e)
+        {
+            rekapBeasiswa rekap = new rekapBeasiswa();
+
+            this.Hide();
+
+            rekap.FormClosed += (s, args) =>
+            {
+                this.Show();
+            };
+
+            rekap.Show();
         }
     }
 }
