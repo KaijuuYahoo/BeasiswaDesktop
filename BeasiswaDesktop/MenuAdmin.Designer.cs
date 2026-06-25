@@ -36,22 +36,23 @@ namespace BeasiswaDesktop
             this.logOut = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
+            this.rekap = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBeasiswa)).BeginInit();
             this.SuspendLayout();
             // 
             // textSearch
             // 
             this.textSearch.Location = new System.Drawing.Point(24, 19);
-            this.textSearch.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textSearch.Margin = new System.Windows.Forms.Padding(6);
             this.textSearch.Name = "textSearch";
-            this.textSearch.Size = new System.Drawing.Size(1362, 31);
+            this.textSearch.Size = new System.Drawing.Size(1320, 31);
             this.textSearch.TabIndex = 7;
             this.textSearch.TextChanged += new System.EventHandler(this.SearchAutomatic);
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(1356, 806);
-            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button1.Margin = new System.Windows.Forms.Padding(6);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(220, 44);
             this.button1.TabIndex = 6;
@@ -63,7 +64,7 @@ namespace BeasiswaDesktop
             // 
             this.dgvBeasiswa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvBeasiswa.Location = new System.Drawing.Point(24, 75);
-            this.dgvBeasiswa.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.dgvBeasiswa.Margin = new System.Windows.Forms.Padding(6);
             this.dgvBeasiswa.Name = "dgvBeasiswa";
             this.dgvBeasiswa.RowHeadersWidth = 51;
             this.dgvBeasiswa.Size = new System.Drawing.Size(1552, 719);
@@ -73,7 +74,7 @@ namespace BeasiswaDesktop
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(1124, 806);
-            this.button3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button3.Margin = new System.Windows.Forms.Padding(6);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(220, 44);
             this.button3.TabIndex = 9;
@@ -84,7 +85,7 @@ namespace BeasiswaDesktop
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(892, 806);
-            this.button4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button4.Margin = new System.Windows.Forms.Padding(6);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(220, 44);
             this.button4.TabIndex = 10;
@@ -95,7 +96,7 @@ namespace BeasiswaDesktop
             // logOut
             // 
             this.logOut.Location = new System.Drawing.Point(24, 806);
-            this.logOut.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.logOut.Margin = new System.Windows.Forms.Padding(6);
             this.logOut.Name = "logOut";
             this.logOut.Size = new System.Drawing.Size(220, 44);
             this.logOut.TabIndex = 11;
@@ -106,7 +107,7 @@ namespace BeasiswaDesktop
             // btnReset
             // 
             this.btnReset.Location = new System.Drawing.Point(636, 806);
-            this.btnReset.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(6);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(244, 44);
             this.btnReset.TabIndex = 21;
@@ -117,17 +118,28 @@ namespace BeasiswaDesktop
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(1408, 19);
+            this.lblTotal.Location = new System.Drawing.Point(1353, 25);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(158, 25);
+            this.lblTotal.Size = new System.Drawing.Size(0, 25);
             this.lblTotal.TabIndex = 22;
-            this.lblTotal.Text = "Total Beasiswa";
+            // 
+            // rekap
+            // 
+            this.rekap.Location = new System.Drawing.Point(380, 806);
+            this.rekap.Margin = new System.Windows.Forms.Padding(6);
+            this.rekap.Name = "rekap";
+            this.rekap.Size = new System.Drawing.Size(244, 44);
+            this.rekap.TabIndex = 23;
+            this.rekap.Text = "Rekap";
+            this.rekap.UseVisualStyleBackColor = true;
+            this.rekap.Click += new System.EventHandler(this.btnRekap_Click);
             // 
             // MenuAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1594, 869);
+            this.Controls.Add(this.rekap);
             this.Controls.Add(this.lblTotal);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.logOut);
@@ -136,7 +148,7 @@ namespace BeasiswaDesktop
             this.Controls.Add(this.textSearch);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dgvBeasiswa);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MenuAdmin";
             this.Text = "Dashboard Admin";
             this.Load += new System.EventHandler(this.MenuAdmin_Load);
@@ -155,5 +167,6 @@ namespace BeasiswaDesktop
         private System.Windows.Forms.Button logOut;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Label lblTotal;
+        private System.Windows.Forms.Button rekap;
     }
 }
