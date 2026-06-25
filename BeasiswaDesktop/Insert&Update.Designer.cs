@@ -68,6 +68,8 @@ namespace BeasiswaDesktop
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSQLi = new System.Windows.Forms.Button();
+            this.btnImpEx = new System.Windows.Forms.Button();
+            this.btnImpDb = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.beasiswaBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.beasiswaDBDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.jenjangBindingSource)).BeginInit();
@@ -296,7 +298,7 @@ namespace BeasiswaDesktop
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.Padding = new System.Windows.Forms.Padding(0);
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(1647, 42);
+            this.bindingNavigator1.Size = new System.Drawing.Size(1608, 50);
             this.bindingNavigator1.TabIndex = 18;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -306,7 +308,7 @@ namespace BeasiswaDesktop
             this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(46, 36);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(46, 44);
             this.bindingNavigatorAddNewItem.Text = "Add new";
             // 
             // bindingNavigatorCountItem
@@ -397,11 +399,35 @@ namespace BeasiswaDesktop
             this.btnSQLi.UseVisualStyleBackColor = true;
             this.btnSQLi.Click += new System.EventHandler(this.btnTestInjection_Click);
             // 
+            // btnImpEx
+            // 
+            this.btnImpEx.Location = new System.Drawing.Point(262, 800);
+            this.btnImpEx.Margin = new System.Windows.Forms.Padding(4);
+            this.btnImpEx.Name = "btnImpEx";
+            this.btnImpEx.Size = new System.Drawing.Size(234, 42);
+            this.btnImpEx.TabIndex = 29;
+            this.btnImpEx.Text = "Import From Excel";
+            this.btnImpEx.UseVisualStyleBackColor = true;
+            this.btnImpEx.Click += new System.EventHandler(this.btnImpEx_Click);
+            // 
+            // btnImpDb
+            // 
+            this.btnImpDb.Location = new System.Drawing.Point(527, 798);
+            this.btnImpDb.Margin = new System.Windows.Forms.Padding(4);
+            this.btnImpDb.Name = "btnImpDb";
+            this.btnImpDb.Size = new System.Drawing.Size(234, 42);
+            this.btnImpDb.TabIndex = 28;
+            this.btnImpDb.Text = "Import To Database";
+            this.btnImpDb.UseVisualStyleBackColor = true;
+            this.btnImpDb.Click += new System.EventHandler(this.btnImpDb_Click);
+            // 
             // Insert_Update
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1647, 865);
+            this.ClientSize = new System.Drawing.Size(1608, 865);
+            this.Controls.Add(this.btnImpEx);
+            this.Controls.Add(this.btnImpDb);
             this.Controls.Add(this.btnSQLi);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.namaK);
@@ -478,5 +504,7 @@ namespace BeasiswaDesktop
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
         private System.Windows.Forms.Button btnSQLi;
+        private System.Windows.Forms.Button btnImpEx;
+        private System.Windows.Forms.Button btnImpDb;
     }
 }
