@@ -141,5 +141,10 @@ namespace BeasiswaDesktop
 
         public void UsernameInput(object sender, EventArgs e) { }
         public void PasswordInput(object sender, EventArgs e) { }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -54,5 +54,10 @@ namespace BeasiswaDesktop
             }
             return localIP;
         }
+
+        private void Cetak_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
