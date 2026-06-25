@@ -42,7 +42,7 @@
             // 
             this.dgvBeasiswa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvBeasiswa.Location = new System.Drawing.Point(24, 81);
-            this.dgvBeasiswa.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.dgvBeasiswa.Margin = new System.Windows.Forms.Padding(6);
             this.dgvBeasiswa.Name = "dgvBeasiswa";
             this.dgvBeasiswa.RowHeadersWidth = 51;
             this.dgvBeasiswa.Size = new System.Drawing.Size(1552, 719);
@@ -52,7 +52,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(1356, 810);
-            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button1.Margin = new System.Windows.Forms.Padding(6);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(220, 44);
             this.button1.TabIndex = 1;
@@ -63,20 +63,19 @@
             // textSearch
             // 
             this.textSearch.Location = new System.Drawing.Point(24, 23);
-            this.textSearch.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textSearch.Margin = new System.Windows.Forms.Padding(6);
             this.textSearch.Name = "textSearch";
-            this.textSearch.Size = new System.Drawing.Size(1368, 31);
+            this.textSearch.Size = new System.Drawing.Size(1348, 31);
             this.textSearch.TabIndex = 3;
             this.textSearch.TextChanged += new System.EventHandler(this.LiveSearch);
             // 
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(1418, 29);
+            this.lblTotal.Location = new System.Drawing.Point(1402, 26);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(158, 25);
-            this.lblTotal.TabIndex = 23;
-            this.lblTotal.Text = "Total Beasiswa";
+            this.lblTotal.Size = new System.Drawing.Size(0, 25);
+            this.lblTotal.TabIndex = 4;
             // 
             // BeasiswaRead
             // 
@@ -87,7 +86,7 @@
             this.Controls.Add(this.textSearch);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dgvBeasiswa);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "BeasiswaRead";
             this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.BeasiswaRead_Load);
