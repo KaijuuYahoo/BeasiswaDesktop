@@ -1,9 +1,10 @@
+using ExcelDataReader;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,22 +15,16 @@ namespace BeasiswaDesktop
     public partial class Insert_Update : Form
     {
         private BindingSource bindingSource = new BindingSource();
-
-        private readonly SqlConnection conn;
-        private readonly string connectionString =
-            "Data Source=RIZQI\\RIZQIMAULANA; Initial Catalog=beasiswaDB; Integrated Security=True";
+        private int selectedId = 0;
 
         private void label4_Click(object sender, EventArgs e)
         {
 
         }
 
-        private int selectedId = 0;
-
         public Insert_Update(int id)
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
             selectedId = id;
             namaJ.DropDownStyle = ComboBoxStyle.DropDownList;
             namaK.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -37,9 +32,6 @@ namespace BeasiswaDesktop
 
         private void Insert_Update_Load(object sender, EventArgs e)
         {
-            this.kategoriTableAdapter.Fill(this.beasiswaDBDataSet.Kategori);
-            this.jenjangTableAdapter.Fill(this.beasiswaDBDataSet.Jenjang);
-            this.beasiswaTableAdapter.Fill(this.beasiswaDBDataSet.Beasiswa);
             LoadJenjang();
             LoadKategori();
 
@@ -72,12 +64,7 @@ namespace BeasiswaDesktop
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Beasiswa", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                DataTable dt = DAL.GetAllBeasiswa();
 
                 bindingSource.DataSource = dt;
 
@@ -126,13 +113,7 @@ namespace BeasiswaDesktop
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                string query = "SELECT id_jenjang, nama_jenjang FROM Jenjang";
-                SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                DataTable dt = DAL.GetJenjangList();
 
                 DataRow row = dt.NewRow();
                 row["id_jenjang"] = 0;
@@ -154,13 +135,7 @@ namespace BeasiswaDesktop
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                string query = "SELECT id_kategori, nama_kategori FROM Kategori";
-                SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                DataTable dt = DAL.GetKategoriList();
 
                 DataRow row = dt.NewRow();
                 row["id_kategori"] = 0;
@@ -182,16 +157,11 @@ namespace BeasiswaDesktop
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                DataTable dt = DAL.GetBeasiswaById(selectedId);
 
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Beasiswa WHERE id_beasiswa=@id", conn);
-                cmd.Parameters.AddWithValue("@id", selectedId);
-
-                SqlDataReader r = cmd.ExecuteReader();
-
-                if (r.Read())
+                if (dt.Rows.Count > 0)
                 {
+                    DataRow r = dt.Rows[0];
                     namaB.Text = r["nama_beasiswa"].ToString();
 
                     int jenjang = Convert.ToInt32(r["id_jenjang"]);
@@ -201,8 +171,6 @@ namespace BeasiswaDesktop
                     dtpTutup.Value = Convert.ToDateTime(r["tgl_tutup"]);
                     link.Text = r["link_beasiswa"].ToString();
                     deskripsi.Text = r["deskripsi"].ToString();
-
-                    r.Close();
 
                     namaJ.SelectedValue = jenjang;
                     namaK.SelectedValue = kategori;
@@ -214,34 +182,80 @@ namespace BeasiswaDesktop
             }
         }
 
+        private bool ValidasiInput()
+        {
+            if (string.IsNullOrWhiteSpace(namaB.Text))
+            {
+                MessageBox.Show("Nama beasiswa harus diisi!");
+                namaB.Focus();
+                return false;
+            }
+
+            if (namaJ.SelectedValue == null ||
+                Convert.ToInt32(namaJ.SelectedValue) == 0)
+            {
+                MessageBox.Show("Pilih jenjang!");
+                namaJ.Focus();
+                return false;
+            }
+
+            if (namaK.SelectedValue == null ||
+                Convert.ToInt32(namaK.SelectedValue) == 0)
+            {
+                MessageBox.Show("Pilih kategori!");
+                namaK.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(link.Text))
+            {
+                MessageBox.Show("Link beasiswa harus diisi!");
+                link.Focus();
+                return false;
+            }
+
+            if (!link.Text.StartsWith("https://"))
+            {
+                MessageBox.Show("Link harus diawali https://");
+                link.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(deskripsi.Text))
+            {
+                MessageBox.Show("Deskripsi harus diisi!");
+                deskripsi.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
         private void btnInsert_Click(object sender, EventArgs e)
         {
+            if (!ValidasiInput())
+                return;
+
             try
             {
-                Insert_Update form = new Insert_Update(0);
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                string nama = namaB.Text;
+                int idJenjang = Convert.ToInt32(namaJ.SelectedValue);
+                int idKategori = Convert.ToInt32(namaK.SelectedValue);
+                DateTime tglBuka = dtpBuka.Value;
+                DateTime tglTutup = dtpTutup.Value;
+                string linkVal = link.Text;
+                string deskripsiVal = deskripsi.Text;
 
-                SqlCommand cmd = new SqlCommand("sp_InsertBeasiswa", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                DAL.InsertBeasiswa(nama, idJenjang, idKategori, tglBuka, tglTutup, linkVal, deskripsiVal);
 
-                cmd.Parameters.AddWithValue("@nama_beasiswa", namaB.Text);
-                cmd.Parameters.AddWithValue("@id_jenjang", namaJ.SelectedValue);
-                cmd.Parameters.AddWithValue("@id_kategori", namaK.SelectedValue);
-                cmd.Parameters.AddWithValue("@tgl_buka", dtpBuka.Value);
-                cmd.Parameters.AddWithValue("@tgl_tutup", dtpTutup.Value);
-                cmd.Parameters.AddWithValue("@link_beasiswa", link.Text);
-                cmd.Parameters.AddWithValue("@deskripsi", deskripsi.Text);
-
-                cmd.ExecuteNonQuery();
-
-                MessageBox.Show("Insert berhasil!");
+                MessageBox.Show("Data berhasil ditambahkan");
+                
                 ClearForm();
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("General Error : " + ex.Message);
             }
         }
 
@@ -249,22 +263,15 @@ namespace BeasiswaDesktop
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                string nama = namaB.Text;
+                int idJenjang = Convert.ToInt32(namaJ.SelectedValue);
+                int idKategori = Convert.ToInt32(namaK.SelectedValue);
+                DateTime tglBuka = dtpBuka.Value;
+                DateTime tglTutup = dtpTutup.Value;
+                string linkVal = link.Text;
+                string deskripsiVal = deskripsi.Text;
 
-                SqlCommand cmd = new SqlCommand("sp_UpdateBeasiswa", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@id_beasiswa", selectedId);
-                cmd.Parameters.AddWithValue("@nama_beasiswa", namaB.Text);
-                cmd.Parameters.AddWithValue("@id_jenjang", namaJ.SelectedValue);
-                cmd.Parameters.AddWithValue("@id_kategori", namaK.SelectedValue);
-                cmd.Parameters.AddWithValue("@tgl_buka", dtpBuka.Value);
-                cmd.Parameters.AddWithValue("@tgl_tutup", dtpTutup.Value);
-                cmd.Parameters.AddWithValue("@link_beasiswa", link.Text);
-                cmd.Parameters.AddWithValue("@deskripsi", deskripsi.Text);
-
-                int result = cmd.ExecuteNonQuery();
+                int result = DAL.UpdateBeasiswa(selectedId, nama, idJenjang, idKategori, tglBuka, tglTutup, linkVal, deskripsiVal);
                 if (result == 0)
                 {
                     MessageBox.Show("Update gagal: data tidak ditemukan.");
@@ -275,7 +282,6 @@ namespace BeasiswaDesktop
                     MessageBox.Show("Update berhasil!");
                     this.Close();
                 }
-                
             }
             catch (Exception ex)
             {
@@ -291,23 +297,14 @@ namespace BeasiswaDesktop
             namaJ.SelectedIndex = -1;
             namaK.SelectedIndex = -1;
         }
+
         private void btnTestInjection_Click(object sender, EventArgs e)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    string query =
-                        "UPDATE Beasiswa SET deskripsi='HACKED' WHERE nama_beasiswa='" +
-                        namaB.Text + "'";
-                    using (SqlCommand cmd = new SqlCommand(query, connection))
-                    {
-                        int result = cmd.ExecuteNonQuery();
-                        MessageBox.Show(result + " baris terupdate");
-                        Insert_Update_Load(sender, e);
-                    }
-                }
+                int result = DAL.UpdateBeasiswaUnsafe(deskripsi.Text, namaB.Text);
+                MessageBox.Show(result + " baris terupdate");
+                Insert_Update_Load(sender, e);
                 this.Close();
             }
             catch (Exception ex)
@@ -315,6 +312,105 @@ namespace BeasiswaDesktop
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private DataTable excelData;
+
+        private void btnImpEx_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Excel Workbook (*.xlsx)|*.xlsx";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    using (var stream = File.Open(ofd.FileName,
+                                                  FileMode.Open,
+                                                  FileAccess.Read))
+                    {
+                        using (var reader =
+                            ExcelReaderFactory.CreateReader(stream))
+                        {
+                            var result = reader.AsDataSet(
+                                new ExcelDataSetConfiguration()
+                                {
+                                    ConfigureDataTable =
+                                        (_) => new ExcelDataTableConfiguration()
+                                        {
+                                            UseHeaderRow = true
+                                        }
+                                });
+
+                            excelData = result.Tables[0];
+
+                            MessageBox.Show(
+                                excelData.Rows.Count +
+                                " data berhasil dibaca dari Excel");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnImpDb_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (excelData == null || excelData.Rows.Count == 0)
+                {
+                    MessageBox.Show("Belum ada file Excel yang diimport.");
+                    return;
+                }
+
+                int sukses = 0;
+
+                foreach (DataRow row in excelData.Rows)
+                {
+                    string nama = row["NamaBeasiswa"].ToString();
+                    string jenjang = row["Jenjang"].ToString();
+                    string kategori = row["Kategori"].ToString();
+                    DateTime tglBuka = Convert.ToDateTime(row["TglBuka"]);
+                    DateTime tglTutup = Convert.ToDateTime(row["TglTutup"]);
+                    string linkVal = row["LinkBeasiswa"].ToString();
+                    string deskripsiVal = row["Deskripsi"].ToString();
+
+                    int idJenjang = DAL.GetJenjangIdByName(jenjang);
+                    int idKategori = DAL.GetKategoriIdByName(kategori);
+
+                    DAL.InsertBeasiswaSimple(nama, idJenjang, idKategori, tglBuka, tglTutup, linkVal, deskripsiVal);
+
+                    sukses++;
+                }
+
+                MessageBox.Show(sukses + " data berhasil diimport ke database.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public static string GetLocalIPAddress()
+        {
+            string localIP = string.Empty;
+            try
+            {
+                var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        localIP = ip.ToString();
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error getting local IP address:" + ex.Message);
+            }
+            return localIP;
+        }
+
         private void comboKategori(object sender, EventArgs e)
         {
 
@@ -331,4 +427,3 @@ namespace BeasiswaDesktop
         }
     }
 }
-
